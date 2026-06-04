@@ -456,8 +456,7 @@
         <button class="pill active" data-cat="doggy" onclick="toggleCat(this)">De quatro</button>
         <button class="pill active" data-cat="seated" onclick="toggleCat(this)">Sentada</button>
         <button class="pill active" data-cat="lying" onclick="toggleCat(this)">Deitado/a</button>
-        <button class="pill active" data-cat="oral" onclick="toggleCat(this)">Oral / 69</button>
-        <button class="pill active" data-cat="anal" onclick="toggleCat(this)">Anal</button>
+              <button class="pill active" data-cat="oral" onclick="toggleCat(this)">Oral / 69</button>
       </div>
     </div>
 
@@ -798,24 +797,22 @@ function rollDice() {
 function locationPreposition() { return 'no/a'; }
 
 // ===================== POSITIONS WHEEL =====================
-// Each position uses an exact ID matching the sexpositions.club illustration slug:
-//   https://sexpositions.club/illustrations/[ID].svg
+// Each position carries a direct image URL.
 const POSITIONS = [
-  { id: 'missionary',        name: 'Missionário',       category: 'lying',    desc: 'Clássico, íntimo e cara a cara.' },
-  { id: 'cowgirl',           name: 'Cowgirl',           category: 'seated',   desc: 'Ela monta e controla o ritmo.' },
-  { id: 'doggy',             name: 'Doggy Style',       category: 'doggy',    desc: 'Profundo, intenso e por trás.' },
-  { id: 'reverse-cowgirl',   name: 'Reverse Cowgirl',   category: 'seated',   desc: 'Ela de costas — outro ângulo.' },
-  { id: 'spooning',          name: 'Cuillère (Colher)', category: 'lying',    desc: 'Deitados de lado, abraçados.' },
-  { id: '69-lying',          name: '69 Deitado',        category: 'oral',     desc: 'Prazer oral mútuo e simultâneo.' },
-  { id: 'lotus',             name: 'Lótus',             category: 'seated',   desc: 'Sentados frente a frente, entrelaçados.' },
-  { id: 'bridge',            name: 'Ponte',             category: 'lying',    desc: 'Elevação arqueada para ângulo especial.' },
-  { id: 'against-the-wall',  name: 'Contra a Parede',   category: 'standing', desc: 'De pé, força e paixão.' },
-  { id: 'x-position',        name: 'Posição X',         category: 'lying',    desc: 'Pernas cruzadas, sensação intensa.' },
-  { id: 'anal-missionary',   name: 'Anal Missionário',  category: 'anal',     desc: 'Requer preparação e confiança.' },
-  { id: 'anal-doggy',        name: 'Anal Doggy',        category: 'anal',     desc: 'Anal por trás — devagar e com lubrificação.' },
+  { id: 'missionary',        name: 'Missionário',       category: 'lying',    desc: 'Clássico, íntimo e cara a cara.',          img: 'https://sexpositions.club/wp-content/uploads/2016/03/3_8.png' },
+  { id: 'cowgirl',           name: 'Cowgirl',           category: 'seated',   desc: 'Ela monta e controla o ritmo.',            img: 'https://sexpositions.club/wp-content/uploads/2016/03/1_29.png' },
+  { id: 'doggy',             name: 'Doggy Style',       category: 'doggy',    desc: 'Profundo, intenso e por trás.',            img: 'https://sexpositions.club/wp-content/uploads/2016/03/4_23.png' },
+  { id: 'reverse-cowgirl',   name: 'Reverse Cowgirl',   category: 'seated',   desc: 'Ela de costas — outro ângulo.',            img: 'https://sexpositions.club/wp-content/uploads/2016/03/2_41_3.png' },
+  { id: 'spooning',          name: 'Cuillère (Colher)', category: 'lying',    desc: 'Deitados de lado, abraçados.',             img: 'https://sexpositions.club/wp-content/uploads/2016/03/13_3.png' },
+  { id: '69-lying',          name: '69 Deitado',        category: 'oral',     desc: 'Prazer oral mútuo e simultâneo.',          img: 'https://sexpositions.club/wp-content/uploads/2016/03/12_15_4.png' },
+  { id: 'lotus',             name: 'Lótus',             category: 'seated',   desc: 'Sentados frente a frente, entrelaçados.',  img: 'https://sexpositions.club/wp-content/uploads/2019/06/1_72_3.png' },
+  { id: 'bridge',            name: 'Ponte',             category: 'lying',    desc: 'Elevação arqueada para ângulo especial.',  img: 'https://sexpositions.club/wp-content/uploads/2016/04/3_62.png' },
+  { id: 'against-the-wall',  name: 'Contra a Parede',   category: 'standing', desc: 'De pé, força e paixão.',                   img: 'https://www.sexualpositionsfree.com/wp-content/uploads/2026/05/Driving-The-Peg-Home-Against-A-Wall-1.jpg' },
+  { id: 'x-position',        name: 'Posição X',         category: 'lying',    desc: 'Pernas cruzadas, sensação intensa.',       img: 'https://www.the-sun.com/wp-content/uploads/sites/6/2020/02/dk-graphic-sex-position-cross-legs-1.jpg?quality=80&strip=all&w=1080&h=1000&crop=1' },
+  { id: 'full-n',            name: 'Full N',            category: 'seated',   desc: 'Variação profunda e envolvente.',          img: 'https://sexpositions.club/wp-content/uploads/2019/06/2_4_5.png' },
 ];
 
-let activeCats = new Set(['standing','doggy','seated','lying','oral','anal']);
+let activeCats = new Set(['standing','doggy','seated','lying','oral']);
 let positionsWheelAngle = 0;
 let isSpinningPos = false;
 
@@ -994,7 +991,7 @@ function showPositionModal(pos) {
     canvas.style.display = 'none';
     img.style.display = 'block';
   };
-  // If the SVG fails -> draw the fallback on the canvas.
+  // If the image fails -> draw the fallback on the canvas.
   img.onerror = function() {
     loader.style.display = 'none';
     img.style.display = 'none';
@@ -1002,8 +999,8 @@ function showPositionModal(pos) {
     drawPositionFallback(canvas, pos);
   };
 
-  // Point the <img> at the real illustration from sexpositions.club
-  img.src = `https://sexpositions.club/illustrations/${pos.id}.svg`;
+  // Point the <img> at the real illustration URL for this position.
+  img.src = pos.img;
 
   openModal('modal-position');
 }
