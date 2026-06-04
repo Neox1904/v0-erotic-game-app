@@ -708,19 +708,39 @@ function showScreen(id) {
 
 // ===================== GENDER-BASED LOCATIONS =====================
 // The locations depend ONLY on whose BODY is the target of the action.
-//  - Acting on the WOMAN's body  -> LOCATIONS_FEMALE_BODY
-//  - Acting on the MAN's body    -> LOCATIONS_MALE_BODY (Pés, Rabo/Ânus e Clítoris ficam banidos)
+//  - Acting on the WOMAN's body  -> LOCATIONS_FEMALE_BODY (18 opções)
+//  - Acting on the MAN's body    -> LOCATIONS_MALE_BODY (14 opções - banidos: Pés, Rabo/Ânus, Clítoris)
 const LOCATIONS_FEMALE_BODY = [
   'Pescoço', 'Seios', 'Mamilos', 'Rabo', 'Coxas', 'Clítoris',
-  'Garganta', 'Orelha', 'Pés', 'Virilha', 'Lábios'
+  'Orelha', 'Pés', 'Virilha', 'Lábios', 'Nuca',
+  'Linha da Cintura', 'Costas', 'Barriga', 'Atrás dos Joelhos', 'Axilas', 'Pulsos'
 ];
 
 const LOCATIONS_MALE_BODY = [
   'Pescoço', 'Mamilos', 'Coxas', 'Pénis',
-  'Garganta', 'Orelha', 'Virilha', 'Lábios'
+  'Orelha', 'Virilha', 'Lábios',
+  'Linha da Cintura', 'Costas', 'Peito', 'Barriga', 'Pulsos'
 ];
 
-const DICE_ACTIONS = ['Beijar', 'Lamber', 'Morder suavemente', 'Chupar', 'Massagear', 'Soprar', 'Tocar', 'Provocar', 'Lamber com calda'];
+const DICE_ACTIONS = [
+  'Beijar',
+  'Lamber',
+  'Morder suavemente',
+  'Chupar',
+  'Massagear',
+  'Soprar',
+  'Tocar',
+  'Provocar',
+  'Arranhar ao de leve',
+  'Sussurrar segredos porcos',
+  'Respirar quente',
+  'Morder com pressão',
+  'Esfregar o corpo/rosto',
+  'Dar palmadas leves',
+  'Chupar intensamente',
+  'Lamber em círculos rápidos',
+  'Ataque Surpresa'
+];
 
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -1007,13 +1027,15 @@ function showPositionModal(pos) {
 
 // ===================== FANTASY WHEEL =====================
 const FANTASIES = [
-  { name: 'Professor/a e Aluno/a', icon: '📚', desc: 'Uma lição privada depois das aulas. Quem ensina quem?' },
-  { name: 'Chefe e Secretário/a', icon: '💼', desc: 'Reunião extraordinária. Portas fechadas. Regras suspensas.' },
-  { name: 'Estranhos num Bar', icon: '🍸', desc: 'Não se conhecem. Apenas atração pura e um número de quarto.' },
-  { name: 'Médico/a e Paciente', icon: '💊', desc: 'Consulta privada. Diagnóstico: tensão insuportável.' },
-  { name: 'Fotógrafo/a e Modelo', icon: '📸', desc: 'O estúdio, a luz, o olhar. A câmera nunca mente.' },
-  { name: 'Massagista e Cliente', icon: '💆', desc: 'As mãos deslizam. O profissionalismo dissolve-se.' },
-  { name: 'Entregador/a ao Domicílio', icon: '📦', desc: 'Estava mesmo à espera desta encomenda especial.' },
+  { name: 'Professor/a e Aluno/a', icon: '📚', desc: 'Castigos por faltar aos trabalhos ou suborno por notas.' },
+  { name: 'Chefe e Secretário/a', icon: '💼', desc: 'Ficar depois da hora no escritório sob as ordens estritas de quem manda.' },
+  { name: 'Estranhos num Bar', icon: '🍸', desc: 'Ignorarem-se por completo e fingirem que se estão a seduzir e a conhecer pela primeira vez.' },
+  { name: 'Médico/a e Paciente', icon: '💊', desc: 'Um exame físico extremamente detalhado, invasivo e sensual.' },
+  { name: 'Fotógrafo/a e Modelo', icon: '📸', desc: 'Sessão fotográfica privada com roupas provocantes onde o fotógrafo dita as poses.' },
+  { name: 'Massagista e Cliente', icon: '💆', desc: 'Uma massagem relaxante que quebra todas as regras profissionais.' },
+  { name: 'Entregador/a ao Domicílio', icon: '📦', desc: 'Não há dinheiro para pagar a encomenda... o pagamento terá de ser feito de outra forma.' },
+  { name: 'Interrogatório Policial', icon: '👮', desc: 'Um foi apanhado a fazer algo ilegal e o polícia usa autoridade total para o interrogar e revistar.' },
+  { name: 'Raptado/a / Sequestro', icon: '🔗', desc: 'Um está amarrado ou cativo e o outro tem controlo absoluto sobre o que lhe faz.' },
 ];
 
 let fantasyWheelAngle = 0;
@@ -1112,12 +1134,18 @@ function showFantasyModal(fantasy) {
 
 // ===================== KINKY WHEEL =====================
 const KINKY_OPTIONS = [
-  { name: 'Spanking', icon: '👋', desc: 'Palmadas controladas. Intensidade acordada entre vocês.', intensity: '🌶🌶' },
-  { name: 'Choking Suave', icon: '🤲', desc: 'Mão suave no pescoço. Comunicação e confiança total.', intensity: '🌶🌶🌶' },
-  { name: 'Hair Pulling', icon: '💇', desc: 'Puxar o cabelo com confiança. Segurar, não machucar.', intensity: '🌶🌶' },
-  { name: 'Dirty Talk', icon: '🗣️', desc: 'Sussurrar fantasias proibidas ao ouvido. Sem filtros.', intensity: '🌶' },
-  { name: 'Algemas', icon: '⛓️', desc: 'Prender as mãos — com fio, lenço ou algemas. Vulnerabilidade total.', intensity: '🌶🌶🌶' },
-  { name: 'Submissão 5min', icon: '🙇', desc: 'Um de vocês obedece a tudo durante 5 minutos. Usa a palavra de segurança se necessário.', intensity: '🌶🌶🌶🌶' },
+  { name: 'Spanking Intenso', icon: '👋', desc: 'Sequência de palmadas firmes no rabo até ficar bem marcado/quente.', intensity: '🌶🌶🌶' },
+  { name: 'Choking', icon: '🤲', desc: 'Mão no pescoço com aperto controlado para cortar ligeiramente a respiração — sempre com cuidado.', intensity: '🌶🌶🌶' },
+  { name: 'Hair Pulling', icon: '💇', desc: 'Puxar o cabelo por trás com força para ditar a direção da cabeça e o ritmo.', intensity: '🌶🌶🌶' },
+  { name: 'Dirty Talk Hardcore', icon: '🗣️', desc: 'Humilhação verbal erótica, dizer exatamente as coisas mais porcas e explícitas ao ouvido.', intensity: '🌶🌶' },
+  { name: 'Bondage Total', icon: '⛓️', desc: 'Prender os pulsos e tornozelos à cama, deixando o parceiro completamente indefeso.', intensity: '🌶🌶🌶🌶' },
+  { name: 'Submissão Cega (5min)', icon: '🙇', desc: 'O submisso ajoelha-se e obedece a QUALQUER ordem física do dominante sem hesitar.', intensity: '🌶🌶🌶🌶' },
+  { name: 'Restrição de Movimento', icon: '🔒', desc: 'O dominante prende os braços do outro contra o colchão usando apenas a força do corpo.', intensity: '🌶🌶🌶' },
+  { name: 'Edging / Negação', icon: '⏸️', desc: 'Levar o parceiro ao limite do orgasmo e obrigá-lo a parar à força. Repetir várias vezes.', intensity: '🌶🌶🌶' },
+  { name: 'Oral Forçado', icon: '😈', desc: 'Ritmo agressivo no sexo oral com leves palmadinhas na cara com a mão ou com o membro.', intensity: '🌶🌶🌶' },
+  { name: 'Marcar a Pele', icon: '🩸', desc: 'Morder e arranhar as costas ou coxas com força suficiente para deixar marcas temporárias.', intensity: '🌶🌶🌶' },
+  { name: 'Brinquedos / Vibração', icon: '⚡', desc: 'Usar um vibrador no máximo e proibir o parceiro de se mover ou afastar.', intensity: '🌶🌶🌶' },
+  { name: 'Deepthroat Obrigatório', icon: '👄', desc: 'Sexo oral profundo até ao limite, controlado totalmente pelo ritmo dele.', intensity: '🌶🌶🌶🌶' },
 ];
 
 let kinkyWheelAngle = 0;
