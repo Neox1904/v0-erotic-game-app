@@ -708,16 +708,18 @@ function showScreen(id) {
 
 // ===================== GENDER-BASED LOCATIONS =====================
 // The locations depend ONLY on whose BODY is the target of the action.
-//  - Acting on the WOMAN's body  -> LOCATIONS_FEMALE_BODY
-//  - Acting on the MAN's body    -> LOCATIONS_MALE_BODY (Pés, Rabo/Ânus e Clítoris ficam banidos)
+//  - Acting on the WOMAN's body  -> LOCATIONS_FEMALE_BODY (18 opções)
+//  - Acting on the MAN's body    -> LOCATIONS_MALE_BODY (14 opções - banidos: Pés, Rabo/Ânus, Clítoris)
 const LOCATIONS_FEMALE_BODY = [
   'Pescoço', 'Seios', 'Mamilos', 'Rabo', 'Coxas', 'Clítoris',
-  'Garganta', 'Orelha', 'Pés', 'Virilha', 'Lábios'
+  'Garganta', 'Orelha', 'Pés', 'Virilha', 'Lábios', 'Nuca',
+  'Linha da Cintura', 'Costas', 'Barriga', 'Atrás dos Joelhos', 'Axilas', 'Pulsos'
 ];
 
 const LOCATIONS_MALE_BODY = [
   'Pescoço', 'Mamilos', 'Coxas', 'Pénis',
-  'Garganta', 'Orelha', 'Virilha', 'Lábios'
+  'Garganta', 'Orelha', 'Virilha', 'Lábios',
+  'Linha da Cintura', 'Costas', 'Peito', 'Barriga', 'Pulsos'
 ];
 
 const DICE_ACTIONS = [
@@ -729,22 +731,15 @@ const DICE_ACTIONS = [
   'Soprar',
   'Tocar',
   'Provocar',
-  'Lamber com calda',
-  'Lamber lentamente em círculo',
-  'Morder com força controlada',
-  'Arranhar suavemente com as unhas',
-  'Dar palmadas rápidas e estaladas',
-  'Chupar intensamente até fazer chupão',
-  'Passar a ponta da língua muito devagar',
-  'Respirar quente / Soprar de perto',
-  'Provocar com os lábios sem usar a língua',
-  'Tocar firmemente com as duas mãos',
-  'Lamber com saliva abundante',
-  'Alternar entre dentadas leves e lamber',
-  'Morder e puxar a pele',
-  'Passar os cabelos ou o corpo',
-  'Dirty Talk sussurrado na zona',
-  'Ataque Surpresa (Língua e Dentes rápido)',
+  'Arranhar ao de leve',
+  'Sussurrar segredos porcos',
+  'Respirar quente',
+  'Morder com pressão',
+  'Esfregar o corpo/rosto',
+  'Dar palmadas leves',
+  'Chupar intensamente',
+  'Lamber em círculos rápidos',
+  'Ataque Surpresa'
 ];
 
 function pickRandom(arr) {
