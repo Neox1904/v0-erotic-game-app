@@ -693,16 +693,13 @@ function showScreen(id) {
   });
   const target = document.getElementById(id);
   target.style.display = 'block';
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      target.classList.add('active');
-      target.style.opacity = '1';
-    });
-  });
+  target.classList.add('active');
+  target.style.opacity = '1';
+  
   // Initialize wheels when shown
-  if (id === 'screen-positions') setTimeout(() => drawPositionsWheel(), 100);
-  if (id === 'screen-fantasy') setTimeout(() => drawFantasyWheel(), 100);
-  if (id === 'screen-kinky') setTimeout(() => drawKinkyWheel(), 100);
+  if (id === 'screen-positions') drawPositionsWheel();
+  if (id === 'screen-fantasy') drawFantasyWheel();
+  if (id === 'screen-kinky') drawKinkyWheel();
   window.scrollTo(0,0);
 }
 
@@ -1349,6 +1346,16 @@ function completeBlindTurn() {
 window.addEventListener('DOMContentLoaded', () => {
   setDiceTurn('male');
 });
+
+// FASTER: Also init on document.readyState for quicker response in iframes
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setDiceTurn('male');
+  });
+} else {
+  // Already loaded (iframe scenario)
+  setDiceTurn('male');
+}
 
 // Fix for roundRect on older browsers
 if (!CanvasRenderingContext2D.prototype.roundRect) {
