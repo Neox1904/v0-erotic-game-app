@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>COUPLES PLAY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --neon-pink: #ff2d78;
+    --neon-purple: #b537f2;
+    --neon-red: #ff1744;
+    --dark-bg: #08010f;
+    --dark-card: #100820;
+    --dark-card2: #140d24;
+    --glow-pink: 0 0 20px #ff2d7888, 0 0 40px #ff2d7844;
+    --glow-purple: 0 0 20px #b537f288, 0 0 40px #b537f244;
+    --glow-red: 0 0 20px #ff174488, 0 0 40px #ff174444;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--dark-bg);
+    color: #e8d5f5;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, #2a0a4a44, transparent),
+      radial-gradient(ellipse 50% 80% at -10% 50%, #4a003344, transparent),
+      radial-gradient(ellipse 50% 80% at 110% 80%, #1a003a44, transparent);
+  }
+
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+  .screen { display: none; opacity: 0; transition: opacity 0.4s ease; }
+  .screen.active { display: block; opacity: 1; }
+
+  /* NEON TEXT */
+  .neon-pink {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px #ff2d78cc, 0 0 30px #ff2d7866;
+  }
+  .neon-purple {
+    color: var(--neon-purple);
+    text-shadow: 0 0 10px #b537f2cc, 0 0 30px #b537f266;
+  }
+  .neon-red {
+    color: var(--neon-red);
+    text-shadow: 0 0 10px #ff1744cc, 0 0 30px #ff174466;
+  }
+
+  /* CARDS HOME */
+  .game-card {
+    background: var(--dark-card);
+    border-radius: 20px;
+    padding: 22px 20px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #2a103a;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .game-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: linear-gradient(135deg, transparent 60%, #ffffff08);
+  }
+  .game-card:active { transform: scale(0.97); }
+  .game-card.pink { box-shadow: 0 4px 30px #ff2d7822; border-color: #ff2d7833; }
+  .game-card.purple { box-shadow: 0 4px 30px #b537f222; border-color: #b537f233; }
+  .game-card.red { box-shadow: 0 4px 30px #ff174422; border-color: #ff174433; }
+  .game-card.teal { box-shadow: 0 4px 30px #00f5c422; border-color: #00f5c433; }
+  .game-card.gold { box-shadow: 0 4px 30px #ffd70022; border-color: #ffd70033; }
+
+  .card-icon { font-size: 2.4rem; margin-bottom: 10px; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; }
+  .card-desc { font-size: 0.82rem; opacity: 0.65; line-height: 1.5; font-weight: 300; }
+  .card-badge {
+    position: absolute; top: 16px; right: 16px;
+    font-size: 0.65rem; padding: 3px 10px;
+    border-radius: 20px; font-weight: 500; letter-spacing: 0.08em;
+  }
+
+  /* BUTTONS */
+  .btn-neon {
+    background: linear-gradient(135deg, #ff2d78, #b537f2);
+    color: white; border: none; border-radius: 50px;
+    padding: 14px 32px; font-size: 1rem; font-weight: 500;
+    cursor: pointer; letter-spacing: 0.05em;
+    box-shadow: 0 4px 20px #ff2d7844;
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    user-select: none; -webkit-user-select: none;
+  }
+  .btn-neon:active { transform: scale(0.96); box-shadow: 0 2px 10px #ff2d7844; }
+  .btn-neon:disabled { opacity: 0.6; cursor: default; }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--neon-pink);
+    border: 1.5px solid var(--neon-pink);
+    border-radius: 50px; padding: 12px 28px;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer;
+    transition: background 0.2s; font-family: 'DM Sans', sans-serif;
+    user-select: none; -webkit-user-select: none;
+  }
+  .btn-outline:active { background: #ff2d7822; }
+
+  .btn-back {
+    background: transparent; border: none; color: #9966bb;
+    font-size: 0.9rem; cursor: pointer; padding: 8px 0;
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    user-select: none; -webkit-user-select: none;
+  }
+  .btn-back:active { color: var(--neon-pink); }
+
+  /* TOGGLE PLAYER */
+  .toggle-group {
+    display: flex; background: #1a0a2e; border-radius: 50px;
+    padding: 4px; gap: 4px;
+  }
+  .toggle-btn {
+    flex: 1; border: none; border-radius: 50px;
+    padding: 9px 12px; font-size: 0.82rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif; color: #9966bb;
+    background: transparent;
+    user-select: none; -webkit-user-select: none;
+  }
+  .toggle-btn.active { background: linear-gradient(135deg, #ff2d78, #b537f2); color: white; }
+
+  /* DICE */
+  .dice-box {
+    width: 120px; height: 120px; background: var(--dark-card2);
+    border-radius: 20px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 500; text-align: center; padding: 16px;
+    border: 1.5px solid #3a1050;
+    box-shadow: 0 4px 20px #00000066; line-height: 1.4;
+    transition: box-shadow 0.3s;
+  }
+  .dice-box.glow { box-shadow: var(--glow-pink); border-color: var(--neon-pink); }
+  .dice-box.rolling {
+    animation: diceShake 0.15s infinite;
+  }
+  @keyframes diceShake {
+    0% { transform: translate(0,0) rotate(0deg); }
+    25% { transform: translate(-3px,2px) rotate(-3deg); }
+    50% { transform: translate(3px,-2px) rotate(3deg); }
+    75% { transform: translate(-2px,3px) rotate(-1deg); }
+    100% { transform: translate(0,0) rotate(0deg); }
+  }
+  .dice-label { font-size: 0.7rem; color: #7755aa; margin-top: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* WHEEL */
+  .wheel-container { position: relative; display: inline-block; }
+  .wheel-canvas { border-radius: 50%; }
+  .wheel-pointer {
+    position: absolute; top: -18px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 28px solid var(--neon-pink);
+    filter: drop-shadow(0 0 8px var(--neon-pink));
+    z-index: 10;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: #000000cc;
+    backdrop-filter: blur(8px); z-index: 100;
+    display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; }
+  .modal-box {
+    background: linear-gradient(180deg, #1a0a2e, #0d0118);
+    border-radius: 30px 30px 0 0;
+    padding: 32px 24px 40px;
+    width: 100%; max-width: 480px;
+    border-top: 1px solid #3a1050;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(.22,.68,0,1.2);
+    box-shadow: 0 -10px 60px #b537f222;
+  }
+  .modal-overlay.open .modal-box { transform: translateY(0); }
+
+  /* FILTER PILLS */
+  .pill {
+    padding: 8px 16px; border-radius: 50px; font-size: 0.78rem;
+    border: 1.5px solid #3a1050; background: transparent; color: #9966bb;
+    cursor: pointer; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    user-select: none; -webkit-user-select: none;
+  }
+  .pill.active { background: #ff2d7822; border-color: var(--neon-pink); color: var(--neon-pink); }
+
+  /* INPUT */
+  .input-field {
+    background: #1a0a2e; border: 1.5px solid #3a1050; border-radius: 14px;
+    color: white; padding: 14px 16px; font-size: 1rem; width: 100%;
+    font-family: 'DM Sans', sans-serif; outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-field:focus { border-color: var(--neon-purple); }
+
+  /* KINKY SCREEN BG */
+  #screen-kinky, #screen-kinky-warning {
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, #4a000022, transparent),
+      radial-gradient(ellipse 50% 80% at -10% 50%, #3a000044, transparent);
+  }
+
+  /* REVEAL BTN */
+  .btn-reveal {
+    background: linear-gradient(135deg, #b537f2, #ff2d78);
+    color: white; border: none; border-radius: 16px;
+    padding: 20px; font-size: 1.1rem; font-weight: 600;
+    cursor: pointer; width: 100%;
+    font-family: 'DM Sans', sans-serif; letter-spacing: 0.05em;
+    box-shadow: 0 4px 20px #b537f244;
+    user-select: none; -webkit-user-select: none;
+  }
+
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, #3a1050, transparent); margin: 20px 0; }
+
+  .pulse-ring {
+    animation: pulseRing 2s ease-out infinite;
+  }
+  @keyframes pulseRing {
+    0% { opacity: 0.8; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.3); }
+  }
+
+  /* Position image - white background so vector illustration contrasts with dark mode */
+  .position-img {
+    width: 100%; max-width: 260px; height: 220px;
+    object-fit: contain; margin: 0 auto;
+    display: block;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 2px solid var(--neon-purple);
+    box-shadow: var(--glow-purple);
+    padding: 12px;
+  }
+
+  /* Loading spinner for position image */
+  .img-loader {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: #7755aa; font-size: 0.8rem; letter-spacing: 0.1em;
+  }
+  .img-loader::after {
+    content: ''; width: 28px; height: 28px; margin-left: 10px;
+    border: 3px solid #3a1050; border-top-color: var(--neon-purple);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #3a1050; border-radius: 2px; }
+
+  /* Kinky card */
+  .kinky-card {
+    background: linear-gradient(135deg, #1a0005, #200010);
+    border: 1px solid #4a001533;
+    border-radius: 16px; padding: 16px;
+  }
+
+  /* Challenge result box */
+  .challenge-box {
+    background: linear-gradient(135deg, #1a0a2e, #0d0118);
+    border: 1.5px solid #3a1050; border-radius: 20px;
+    padding: 24px; text-align: center;
+    box-shadow: 0 4px 30px #b537f211;
+  }
+  .challenge-hidden {
+    filter: blur(12px); user-select: none; pointer-events: none;
+    transition: filter 0.5s;
+  }
+  .challenge-hidden.revealed { filter: blur(0); }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in-up { animation: fadeInUp 0.45s ease forwards; }
+
+  /* Stars BG decoration */
+  .stars {
+    position: fixed; width: 100%; height: 100%; top: 0; left: 0;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .star {
+    position: absolute; background: white; border-radius: 50%;
+    animation: twinkle var(--dur, 3s) infinite ease-in-out;
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: var(--op, 0.4); transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars decoration -->
+<div class="stars" id="stars"></div>
+
+<!-- ==================== HOME ==================== -->
+<div id="screen-home" class="screen active" style="min-height:100vh; padding: 0 0 40px;">
+  <div style="padding: 50px 24px 24px;">
+    <div style="text-align:center; margin-bottom: 36px;">
+      <div style="font-size: 0.72rem; letter-spacing: 0.3em; color: #7755aa; margin-bottom: 8px; text-transform: uppercase;">✦ Modo Privado ✦</div>
+      <h1 style="font-size: 2.6rem; font-weight: 900; line-height: 1;" class="neon-pink">COUPLES</h1>
+      <h1 style="font-size: 2.6rem; font-weight: 900; line-height: 1; color: #e8d5f5;">PLAY</h1>
+      <div style="width: 60px; height: 2px; background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple)); margin: 14px auto 0;"></div>
+      <p style="margin-top: 12px; font-size: 0.83rem; color: #7755aa; font-weight: 300;">Escolha o vosso jogo de noite</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 1;">
+
+      <!-- DOUBLE DICE -->
+      <div class="game-card pink fade-in-up" style="animation-delay:0.05s" onclick="showScreen('screen-dice')">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div class="card-icon">🎲</div>
+            <div class="card-title neon-pink">Double Dice</div>
+            <div class="card-desc">Rola os dados do prazer — ação + local numa combinação inesperada.</div>
+          </div>
+          <span class="card-badge" style="background:#ff2d7822; color:var(--neon-pink); border: 1px solid #ff2d7833;">CLÁSSICO</span>
+        </div>
+      </div>
+
+      <!-- WHEEL OF POSITIONS -->
+      <div class="game-card purple fade-in-up" style="animation-delay:0.1s" onclick="showScreen('screen-positions')">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div class="card-icon">💫</div>
+            <div class="card-title neon-purple">Wheel of Positions</div>
+            <div class="card-desc">Deixa a roleta escolher — posições com filtros por categoria.</div>
+          </div>
+          <span class="card-badge" style="background:#b537f222; color:var(--neon-purple); border: 1px solid #b537f233;">POPULAR</span>
+        </div>
+      </div>
+
+      <!-- FANTASY SPINNER -->
+      <div class="game-card gold fade-in-up" style="animation-delay:0.15s" onclick="showScreen('screen-fantasy')">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div class="card-icon">🎭</div>
+            <div class="card-title" style="color:#ffd700; text-shadow: 0 0 10px #ffd700aa;">Fantasy Spinner</div>
+            <div class="card-desc">Roleplay e cenários de fantasia para soltar a imaginação.</div>
+          </div>
+          <span class="card-badge" style="background:#ffd70022; color:#ffd700; border: 1px solid #ffd70033;">ROLEPLAY</span>
+        </div>
+      </div>
+
+      <!-- KINKY WHEEL -->
+      <div class="game-card red fade-in-up" style="animation-delay:0.2s" onclick="showScreen('screen-kinky-warning')">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div class="card-icon">🔥</div>
+            <div class="card-title neon-red">Kinky Wheel</div>
+            <div class="card-desc">Modo hardcore com fetiches. Apenas para corajosos.</div>
+          </div>
+          <span class="card-badge" style="background:#ff174422; color:var(--neon-red); border: 1px solid #ff174433;">+18 HARDCORE</span>
+        </div>
+      </div>
+
+      <!-- BLIND CHALLENGE -->
+      <div class="game-card teal fade-in-up" style="animation-delay:0.25s" onclick="showScreen('screen-blind-setup')">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <div class="card-icon">🙈</div>
+            <div class="card-title" style="color:#00f5c4; text-shadow: 0 0 10px #00f5c4aa;">Blind Challenge</div>
+            <div class="card-desc">Um de venda nos olhos, o outro controla o destino.</div>
+          </div>
+          <span class="card-badge" style="background:#00f5c422; color:#00f5c4; border: 1px solid #00f5c433;">DESAFIO</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DOUBLE DICE ==================== -->
+<div id="screen-dice" class="screen" style="min-height:100vh; padding: 24px;">
+  <div style="position:relative; z-index:1;">
+    <button class="btn-back" onclick="showScreen('screen-home')">← Voltar ao Menu</button>
+    <h2 style="font-size:1.8rem; margin: 16px 0 6px;" class="neon-pink">Double Dice</h2>
+    <p style="font-size:0.82rem; color:#7755aa; margin-bottom: 24px;">Rola e obedeça ao destino.</p>
+
+    <!-- Toggle quem rola -->
+    <div style="margin-bottom: 28px;">
+      <div style="font-size: 0.72rem; letter-spacing: 0.15em; color: #7755aa; margin-bottom: 10px; text-transform: uppercase;">Quem rola os dados?</div>
+      <div class="toggle-group">
+        <button class="toggle-btn active" id="toggle-male" onclick="setDiceTurn('male')">♂️ Vez dele</button>
+        <button class="toggle-btn" id="toggle-female" onclick="setDiceTurn('female')">♀️ Vez dela</button>
+      </div>
+      <p style="font-size:0.72rem; color:#7755aa; margin-top:10px; text-align:center;" id="dice-turn-hint">Ele age sobre o corpo dela.</p>
+    </div>
+
+    <!-- Dice Display -->
+    <div style="display:flex; gap: 16px; justify-content:center; margin-bottom: 32px;">
+      <div style="text-align:center;">
+        <div class="dice-box" id="dice1">
+          <span style="font-size: 2rem;">🎲</span>
+        </div>
+        <div class="dice-label">AÇÃO</div>
+      </div>
+      <div style="display:flex; align-items:center; color:#3a1050; font-size:1.5rem;">+</div>
+      <div style="text-align:center;">
+        <div class="dice-box" id="dice2">
+          <span style="font-size: 2rem;">🎲</span>
+        </div>
+        <div class="dice-label">LOCAL</div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-bottom: 24px;">
+      <button class="btn-neon" onclick="rollDice()" id="btn-roll" style="min-width: 200px;">
+        🎲 Rolar Dados
+      </button>
+    </div>
+
+    <div id="dice-result" style="display:none;" class="challenge-box">
+      <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: #7755aa; margin-bottom: 8px; text-transform: uppercase;">Resultado</div>
+      <div id="dice-result-text" style="font-size: 1.3rem; font-weight: 600; line-height: 1.5;"></div>
+      <div style="margin-top: 12px; font-size: 0.78rem; color: #7755aa;" id="dice-player-text"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== WHEEL OF POSITIONS ==================== -->
+<div id="screen-positions" class="screen" style="min-height:100vh; padding: 24px;">
+  <div style="position:relative; z-index:1;">
+    <button class="btn-back" onclick="showScreen('screen-home')">← Voltar ao Menu</button>
+    <h2 style="font-size:1.8rem; margin: 16px 0 6px;" class="neon-purple">Wheel of Positions</h2>
+    <p style="font-size:0.82rem; color:#7755aa; margin-bottom: 18px;">Filtra e gira a roleta.</p>
+
+    <!-- Filters -->
+    <div style="margin-bottom: 20px;">
+      <div style="font-size: 0.72rem; letter-spacing: 0.15em; color: #7755aa; margin-bottom: 10px; text-transform: uppercase;">Filtros de Categoria</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="position-filters">
+        <button class="pill active" data-cat="standing" onclick="toggleCat(this)">De pé</button>
+        <button class="pill active" data-cat="doggy" onclick="toggleCat(this)">De quatro</button>
+        <button class="pill active" data-cat="seated" onclick="toggleCat(this)">Sentada</button>
+        <button class="pill active" data-cat="lying" onclick="toggleCat(this)">Deitado/a</button>
+        <button class="pill active" data-cat="oral" onclick="toggleCat(this)">Oral / 69</button>
+        <button class="pill active" data-cat="anal" onclick="toggleCat(this)">Anal</button>
+      </div>
+    </div>
+
+    <!-- Wheel -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap: 20px; margin-bottom: 24px;">
+      <div class="wheel-container">
+        <div class="wheel-pointer" style="border-top-color: #b537f2;"></div>
+        <canvas id="positions-wheel" width="280" height="280" class="wheel-canvas"></canvas>
+      </div>
+      <button class="btn-neon" onclick="spinPositionsWheel()" id="btn-spin-pos" style="min-width: 200px;">
+        ✨ Girar Roleta
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Position Modal -->
+<div class="modal-overlay" id="modal-position">
+  <div class="modal-box">
+    <div style="text-align:center;">
+      <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: #7755aa; margin-bottom: 12px; text-transform: uppercase;">✦ Posição Sorteada ✦</div>
+      <div id="modal-pos-name" style="font-family:'Playfair Display',serif; font-size: 1.9rem; font-weight: 700; margin-bottom: 8px;" class="neon-purple"></div>
+      <div id="modal-pos-cat" style="font-size: 0.78rem; padding: 4px 14px; border-radius: 20px; display:inline-block; margin-bottom: 20px;"></div>
+      <div style="position:relative; margin-bottom: 16px; min-height: 220px; display:flex; align-items:center; justify-content:center;">
+        <div class="img-loader" id="modal-pos-loader">A carregar</div>
+        <img id="modal-pos-img" class="position-img" src="" alt="" style="display:none;" />
+        <canvas id="modal-pos-canvas" width="260" height="200" style="display:none; width:100%; max-width:260px; border-radius:16px; margin:0 auto; background:#1a0a2e;"></canvas>
+      </div>
+      <div id="modal-pos-desc" style="font-size: 0.86rem; color: #9988bb; line-height: 1.5; margin-bottom: 16px;"></div>
+      <div class="divider"></div>
+      <button class="btn-neon" onclick="closeModal('modal-position')" style="width:100%;">Girar Novamente</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FANTASY SPINNER ==================== -->
+<div id="screen-fantasy" class="screen" style="min-height:100vh; padding: 24px;">
+  <div style="position:relative; z-index:1;">
+    <button class="btn-back" onclick="showScreen('screen-home')">← Voltar ao Menu</button>
+    <h2 style="font-size:1.8rem; margin: 16px 0 6px; color:#ffd700; text-shadow: 0 0 20px #ffd700aa;">Fantasy Spinner</h2>
+    <p style="font-size:0.82rem; color:#7755aa; margin-bottom: 24px;">Que cenário de roleplay vos espera?</p>
+
+    <div style="display:flex; flex-direction:column; align-items:center; gap: 20px; margin-bottom: 24px;">
+      <div class="wheel-container">
+        <div class="wheel-pointer" style="border-top-color: #ffd700;"></div>
+        <canvas id="fantasy-wheel" width="280" height="280" class="wheel-canvas"></canvas>
+      </div>
+      <button class="btn-neon" onclick="spinFantasyWheel()" id="btn-spin-fantasy" style="min-width: 200px; background: linear-gradient(135deg, #ffd700, #ff8c00);">
+        🎭 Girar Roleta
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Fantasy Modal -->
+<div class="modal-overlay" id="modal-fantasy">
+  <div class="modal-box" style="background: linear-gradient(180deg, #1a1a00, #0d0d00);">
+    <div style="text-align:center;">
+      <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: #aa9900; margin-bottom: 12px; text-transform: uppercase;">✦ Cenário Sorteado ✦</div>
+      <div id="modal-fantasy-icon" style="font-size: 3rem; margin-bottom: 8px;"></div>
+      <div id="modal-fantasy-name" style="font-family:'Playfair Display',serif; font-size: 1.8rem; font-weight: 700; color: #ffd700; text-shadow: 0 0 20px #ffd700aa; margin-bottom: 12px;"></div>
+      <div id="modal-fantasy-desc" style="font-size: 0.88rem; color: #aaa; line-height: 1.6; margin-bottom: 24px;"></div>
+      <div class="divider" style="background: linear-gradient(90deg, transparent, #3a3000, transparent);"></div>
+      <button class="btn-neon" onclick="closeModal('modal-fantasy')" style="width:100%; background: linear-gradient(135deg, #ffd700, #ff8c00);">Girar Novamente</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== KINKY WARNING ==================== -->
+<div id="screen-kinky-warning" class="screen" style="min-height:100vh; padding: 24px; display:flex; flex-direction:column; justify-content:center;">
+  <div style="position:relative; z-index:1; text-align:center; max-width: 360px; margin: 0 auto;">
+    <div style="font-size: 3.5rem; margin-bottom: 16px;">🔥</div>
+    <div style="width: 60px; height: 2px; background: var(--neon-red); margin: 0 auto 20px; box-shadow: var(--glow-red);"></div>
+    <h2 style="font-size: 1.9rem; font-weight: 900; margin-bottom: 12px;" class="neon-red">KINKY WHEEL</h2>
+    <div style="background: #1a000522; border: 1px solid #ff174422; border-radius: 16px; padding: 20px; margin-bottom: 28px;">
+      <p style="font-size: 0.9rem; line-height: 1.7; color: #dd9999;">
+        ⚠️ Este modo contém <strong>fetiches e práticas BDSM</strong> que requerem <strong>consentimento mútuo</strong> e comunicação prévia.
+      </p>
+      <div class="divider"></div>
+      <p style="font-size: 0.85rem; color: #aa7777; line-height: 1.6;">
+        Estabeleçam uma <strong>palavra de segurança</strong> antes de começar. O uso desta palavra interrompe imediatamente qualquer atividade.
+      </p>
+    </div>
+    <p style="font-size: 1rem; color: #e8d5f5; margin-bottom: 24px; font-weight: 500;">Estão ambos de acordo e com consentimento?</p>
+    <div style="display:flex; flex-direction:column; gap: 12px;">
+      <button class="btn-neon" onclick="showScreen('screen-kinky')" style="background: linear-gradient(135deg, #ff1744, #8b0000);">
+        🔥 Sim, Avançar
+      </button>
+      <button class="btn-outline" onclick="showScreen('screen-home')" style="color: #9966bb; border-color: #3a1050;">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== KINKY WHEEL ==================== -->
+<div id="screen-kinky" class="screen" style="min-height:100vh; padding: 24px;">
+  <div style="position:relative; z-index:1;">
+    <button class="btn-back" onclick="showScreen('screen-home')" style="color: #cc4444;">← Voltar ao Menu</button>
+    <h2 style="font-size:1.8rem; margin: 16px 0 6px;" class="neon-red">Kinky Wheel</h2>
+    <p style="font-size:0.82rem; color:#774444; margin-bottom: 24px;">Modo hardcore — palavra de segurança ativa.</p>
+
+    <div style="display:flex; flex-direction:column; align-items:center; gap: 20px; margin-bottom: 24px;">
+      <div class="wheel-container">
+        <div class="wheel-pointer" style="border-top-color: #ff1744;"></div>
+        <canvas id="kinky-wheel" width="280" height="280" class="wheel-canvas"></canvas>
+      </div>
+      <button class="btn-neon" onclick="spinKinkyWheel()" id="btn-spin-kinky" style="min-width: 200px; background: linear-gradient(135deg, #ff1744, #8b0000);">
+        🔥 Girar Roleta
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Kinky Modal -->
+<div class="modal-overlay" id="modal-kinky">
+  <div class="modal-box" style="background: linear-gradient(180deg, #1a0005, #0d0000); border-top-color: #4a0010;">
+    <div style="text-align:center;">
+      <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: #8b3333; margin-bottom: 12px; text-transform: uppercase;">⚠ Sorteado ⚠</div>
+      <div id="modal-kinky-icon" style="font-size: 3rem; margin-bottom: 8px;"></div>
+      <div id="modal-kinky-name" style="font-family:'Playfair Display',serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 12px;" class="neon-red"></div>
+      <div id="modal-kinky-desc" style="font-size: 0.88rem; color: #cc9999; line-height: 1.6; margin-bottom: 20px;"></div>
+      <div style="background: #1a000522; border: 1px solid #ff174422; border-radius: 12px; padding: 12px; margin-bottom: 20px;">
+        <p style="font-size: 0.75rem; color: #8b3333;">⚠ Lembrem-se da palavra de segurança. O consentimento pode ser retirado a qualquer momento.</p>
+      </div>
+      <button class="btn-neon" onclick="closeModal('modal-kinky')" style="width:100%; background: linear-gradient(135deg, #ff1744, #8b0000);">Girar Novamente</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BLIND CHALLENGE SETUP ==================== -->
+<div id="screen-blind-setup" class="screen" style="min-height:100vh; padding: 24px;">
+  <div style="position:relative; z-index:1;">
+    <button class="btn-back" onclick="showScreen('screen-home')">← Voltar ao Menu</button>
+    <h2 style="font-size:1.8rem; margin: 16px 0 6px; color:#00f5c4; text-shadow: 0 0 20px #00f5c4aa;">Blind Challenge</h2>
+    <p style="font-size:0.82rem; color:#7755aa; margin-bottom: 28px;">Introduzam os vossos nomes para começar.</p>
+
+    <div style="display:flex; flex-direction:column; gap: 16px; margin-bottom: 28px;">
+      <div>
+        <label style="font-size:0.75rem; letter-spacing:0.12em; color:#7755aa; display:block; margin-bottom:8px; text-transform:uppercase;">♂️ Jogador 1 — Nome (Homem)</label>
+        <input class="input-field" id="blind-name1" type="text" placeholder="Ex: João" />
+      </div>
+      <div>
+        <label style="font-size:0.75rem; letter-spacing:0.12em; color:#7755aa; display:block; margin-bottom:8px; text-transform:uppercase;">♀️ Jogador 2 — Nome (Mulher)</label>
+        <input class="input-field" id="blind-name2" type="text" placeholder="Ex: Maria" />
+      </div>
+      <div>
+        <label style="font-size:0.75rem; letter-spacing:0.12em; color:#7755aa; display:block; margin-bottom:8px; text-transform:uppercase;">Quem vai de venda?</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="blind-toggle1" onclick="setBlindPlayer(1)">♂️ Jogador 1</button>
+          <button class="toggle-btn" id="blind-toggle2" onclick="setBlindPlayer(2)">♀️ Jogador 2</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-neon" onclick="startBlindChallenge()" style="width:100%;">
+      🎯 Sortear e Começar
+    </button>
+  </div>
+</div>
+
+<!-- ==================== BLIND CHALLENGE GAME ==================== -->
+<div id="screen-blind-game" class="screen" style="min-height:100vh; padding: 24px;">
+  <div style="position:relative; z-index:1;">
+    <button class="btn-back" onclick="showScreen('screen-home')">← Voltar ao Menu</button>
+
+    <!-- Phase 1: Info -->
+    <div id="blind-phase1">
+      <div style="text-align:center; padding: 32px 0;">
+        <div style="font-size: 3rem; margin-bottom: 16px;">🙈</div>
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; color: #00f5c4; text-shadow: 0 0 20px #00f5c4aa;">Pronto para começar!</h2>
+        <div id="blind-instruction" style="font-size: 1.05rem; color: #e8d5f5; line-height: 1.7; margin: 20px 0;"></div>
+        <div class="divider"></div>
+        <button class="btn-neon" onclick="showBlindPhase2()" style="margin-top: 8px; background: linear-gradient(135deg, #00b89c, #00f5c4); color: #001a14; font-weight: 700;">
+          🎯 Gerar Desafio Oculto
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase 2: Challenge -->
+    <div id="blind-phase2" style="display:none;">
+      <div style="margin: 24px 0;">
+        <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: #7755aa; margin-bottom: 16px; text-align:center; text-transform: uppercase;">✦ Desafio Gerado ✦</div>
+        <div class="challenge-box" id="blind-challenge-box">
+          <div style="font-size: 0.75rem; color: #7755aa; margin-bottom: 8px;">🔒 Mantenha premido para revelar</div>
+          <div id="blind-challenge-content" class="challenge-hidden">
+            <div style="font-size: 1.4rem; font-weight: 700; margin-bottom: 4px;" id="blind-action-text"></div>
+            <div style="font-size: 0.9rem; color: #b537f2; margin-top: 8px;">em</div>
+            <div style="font-size: 1.4rem; font-weight: 700; margin-top: 4px; color: var(--neon-pink);" id="blind-location-text"></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+          <button class="btn-reveal" id="btn-reveal"
+            ontouchstart="revealChallenge()" ontouchend="hideChallenge()"
+            onmousedown="revealChallenge()" onmouseup="hideChallenge()" onmouseleave="hideChallenge()">
+            👁 Manter premido para Revelar
+          </button>
+        </div>
+
+        <div style="display:flex; gap: 12px; margin-top: 16px;">
+          <button class="btn-outline" onclick="generateNewBlindChallenge()" style="flex:1;">🔄 Novo Desafio</button>
+          <button class="btn-neon" onclick="completeBlindTurn()" style="flex:1;">✓ Concluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== STARS =====================
+(function() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 50; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 1;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --dur:${2 + Math.random()*4}s;
+      --op:${0.2 + Math.random()*0.4};
+      animation-delay: ${Math.random()*4}s;
+    `;
+    container.appendChild(s);
+  }
+})();
+
+// ===================== SCREEN NAVIGATION =====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+    s.style.opacity = '0';
+  });
+  const target = document.getElementById(id);
+  target.style.display = 'block';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      target.classList.add('active');
+      target.style.opacity = '1';
+    });
+  });
+  // Initialize wheels when shown
+  if (id === 'screen-positions') setTimeout(() => drawPositionsWheel(), 100);
+  if (id === 'screen-fantasy') setTimeout(() => drawFantasyWheel(), 100);
+  if (id === 'screen-kinky') setTimeout(() => drawKinkyWheel(), 100);
+  window.scrollTo(0,0);
+}
+
+// ===================== GENDER-BASED LOCATIONS =====================
+// The locations depend ONLY on whose BODY is the target of the action.
+//  - Acting on the WOMAN's body  -> LOCATIONS_FEMALE_BODY
+//  - Acting on the MAN's body    -> LOCATIONS_MALE_BODY (Pés, Rabo/Ânus e Clítoris ficam banidos)
+const LOCATIONS_FEMALE_BODY = [
+  'Pescoço', 'Seios', 'Mamilos', 'Rabo', 'Coxas', 'Clítoris',
+  'Garganta', 'Orelha', 'Pés', 'Virilha', 'Lábios'
+];
+
+const LOCATIONS_MALE_BODY = [
+  'Pescoço', 'Mamilos', 'Coxas', 'Pénis',
+  'Garganta', 'Orelha', 'Virilha', 'Lábios'
+];
+
+const DICE_ACTIONS = ['Beijar', 'Lamber', 'Morder suavemente', 'Chupar', 'Massagear', 'Soprar', 'Tocar', 'Provocar', 'Lamber com calda'];
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ===================== DOUBLE DICE =====================
+let diceTurn = 'male'; // 'male' = Vez dele (age sobre ela) | 'female' = Vez dela (age sobre ele)
+
+// Returns the valid locations for the body currently being targeted.
+function getDiceLocations() {
+  // Vez dele -> ele age sobre o corpo DELA -> locais do corpo feminino
+  // Vez dela -> ela age sobre o corpo DELE -> locais do corpo masculino
+  return diceTurn === 'male' ? LOCATIONS_FEMALE_BODY : LOCATIONS_MALE_BODY;
+}
+
+function setDiceTurn(turn) {
+  diceTurn = turn;
+  document.getElementById('toggle-male').classList.toggle('active', turn === 'male');
+  document.getElementById('toggle-female').classList.toggle('active', turn === 'female');
+  document.getElementById('dice-turn-hint').textContent =
+    turn === 'male' ? 'Ele age sobre o corpo dela.' : 'Ela age sobre o corpo dele.';
+  // Reset dice display
+  document.getElementById('dice1').innerHTML = '<span style="font-size:2rem">🎲</span>';
+  document.getElementById('dice2').innerHTML = '<span style="font-size:2rem">🎲</span>';
+  document.getElementById('dice-result').style.display = 'none';
+}
+
+function rollDice() {
+  const btn = document.getElementById('btn-roll');
+  btn.disabled = true;
+  const d1 = document.getElementById('dice1');
+  const d2 = document.getElementById('dice2');
+  const resultDiv = document.getElementById('dice-result');
+
+  // Lock the location pool for this roll based on the current turn.
+  const locations = getDiceLocations();
+
+  d1.classList.add('rolling');
+  d2.classList.add('rolling');
+  resultDiv.style.display = 'none';
+
+  // Animate values cycling
+  const interval = setInterval(() => {
+    const randAction = pickRandom(DICE_ACTIONS);
+    const randLoc = pickRandom(locations);
+    d1.innerHTML = `<span style="font-size:0.95rem;font-weight:600;color:var(--neon-pink)">${randAction}</span>`;
+    d2.innerHTML = `<span style="font-size:0.95rem;font-weight:600;color:var(--neon-purple)">${randLoc}</span>`;
+  }, 100);
+
+  setTimeout(() => {
+    clearInterval(interval);
+    d1.classList.remove('rolling');
+    d2.classList.remove('rolling');
+
+    const finalAction = pickRandom(DICE_ACTIONS);
+    const finalLoc = pickRandom(locations);
+
+    d1.innerHTML = `<span style="font-size:1rem;font-weight:600;color:var(--neon-pink)">${finalAction}</span>`;
+    d2.innerHTML = `<span style="font-size:1rem;font-weight:600;color:var(--neon-purple)">${finalLoc}</span>`;
+    d1.classList.add('glow');
+    d2.classList.add('glow');
+    setTimeout(() => { d1.classList.remove('glow'); d2.classList.remove('glow'); }, 1500);
+
+    document.getElementById('dice-result-text').textContent = `${finalAction} ${locationPreposition(finalLoc)} ${finalLoc}`;
+    document.getElementById('dice-player-text').textContent =
+      diceTurn === 'male' ? '♂️ Ele age sobre o corpo dela' : '♀️ Ela age sobre o corpo dele';
+    resultDiv.style.display = 'block';
+
+    btn.disabled = false;
+  }, 1500);
+}
+
+// Small grammar helper so the result reads naturally in Portuguese.
+function locationPreposition() { return 'no/a'; }
+
+// ===================== POSITIONS WHEEL =====================
+// Each position uses an exact ID matching the sexpositions.club illustration slug:
+//   https://sexpositions.club/illustrations/[ID].svg
+const POSITIONS = [
+  { id: 'missionary',        name: 'Missionário',       category: 'lying',    desc: 'Clássico, íntimo e cara a cara.' },
+  { id: 'cowgirl',           name: 'Cowgirl',           category: 'seated',   desc: 'Ela monta e controla o ritmo.' },
+  { id: 'doggy',             name: 'Doggy Style',       category: 'doggy',    desc: 'Profundo, intenso e por trás.' },
+  { id: 'reverse-cowgirl',   name: 'Reverse Cowgirl',   category: 'seated',   desc: 'Ela de costas — outro ângulo.' },
+  { id: 'spooning',          name: 'Cuillère (Colher)', category: 'lying',    desc: 'Deitados de lado, abraçados.' },
+  { id: '69-lying',          name: '69 Deitado',        category: 'oral',     desc: 'Prazer oral mútuo e simultâneo.' },
+  { id: 'lotus',             name: 'Lótus',             category: 'seated',   desc: 'Sentados frente a frente, entrelaçados.' },
+  { id: 'bridge',            name: 'Ponte',             category: 'lying',    desc: 'Elevação arqueada para ângulo especial.' },
+  { id: 'against-the-wall',  name: 'Contra a Parede',   category: 'standing', desc: 'De pé, força e paixão.' },
+  { id: 'x-position',        name: 'Posição X',         category: 'lying',    desc: 'Pernas cruzadas, sensação intensa.' },
+  { id: 'anal-missionary',   name: 'Anal Missionário',  category: 'anal',     desc: 'Requer preparação e confiança.' },
+  { id: 'anal-doggy',        name: 'Anal Doggy',        category: 'anal',     desc: 'Anal por trás — devagar e com lubrificação.' },
+];
+
+let activeCats = new Set(['standing','doggy','seated','lying','oral','anal']);
+let positionsWheelAngle = 0;
+let isSpinningPos = false;
+
+function toggleCat(btn) {
+  const cat = btn.dataset.cat;
+  if (activeCats.has(cat)) {
+    if (activeCats.size <= 1) return; // Keep at least 1
+    activeCats.delete(cat);
+    btn.classList.remove('active');
+  } else {
+    activeCats.add(cat);
+    btn.classList.add('active');
+  }
+  positionsWheelAngle = 0;
+  drawPositionsWheel();
+}
+
+function getFilteredPositions() {
+  return POSITIONS.filter(p => activeCats.has(p.category));
+}
+
+const CAT_COLORS = {
+  lying: ['#3d1a5c','#5c2c8a'],
+  seated: ['#1a1a5c','#2c2c8a'],
+  doggy: ['#5c1a3d','#8a2c5c'],
+  standing: ['#1a3d5c','#2c5c8a'],
+  oral: ['#5c3d1a','#8a5c2c'],
+  anal: ['#5c1a1a','#8a2c2c'],
+};
+
+function drawPositionsWheel(angle = 0) {
+  const canvas = document.getElementById('positions-wheel');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const positions = getFilteredPositions();
+  const cx = 140, cy = 140, r = 130;
+  ctx.clearRect(0, 0, 280, 280);
+
+  if (positions.length === 0) {
+    ctx.fillStyle = '#1a0a2e';
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#7755aa';
+    ctx.font = '14px DM Sans';
+    ctx.textAlign = 'center';
+    ctx.fillText('Seleciona uma categoria', cx, cy);
+    return;
+  }
+
+  const slice = (Math.PI * 2) / positions.length;
+  for (let i = 0; i < positions.length; i++) {
+    const start = angle + i * slice;
+    const end = start + slice;
+    const colors = CAT_COLORS[positions[i].category] || ['#2a1040','#3d1860'];
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    grad.addColorStop(0, colors[0]);
+    grad.addColorStop(1, colors[1]);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = '#0d0118';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Text
+    const midAngle = start + slice / 2;
+    const tx = cx + (r * 0.65) * Math.cos(midAngle);
+    const ty = cy + (r * 0.65) * Math.sin(midAngle);
+    ctx.save();
+    ctx.translate(tx, ty);
+    ctx.rotate(midAngle + Math.PI/2);
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = 'bold 10px DM Sans';
+    ctx.textAlign = 'center';
+    const name = positions[i].name.length > 10 ? positions[i].name.substring(0,9)+'…' : positions[i].name;
+    ctx.fillText(name, 0, 0);
+    ctx.restore();
+  }
+
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, 24, 0, Math.PI*2);
+  ctx.fillStyle = '#0d0118';
+  ctx.fill();
+  ctx.strokeStyle = '#b537f2';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#b537f2';
+  ctx.font = 'bold 18px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('✨', cx, cy);
+}
+
+function spinPositionsWheel() {
+  if (isSpinningPos) return;
+  const positions = getFilteredPositions();
+  if (positions.length === 0) return;
+  isSpinningPos = true;
+  const btn = document.getElementById('btn-spin-pos');
+  btn.disabled = true;
+
+  const totalRotation = (Math.PI * 2 * (5 + Math.random()*5)) + Math.random() * Math.PI * 2;
+  const duration = 3500 + Math.random()*1000;
+  const startTime = performance.now();
+  const startAngle = positionsWheelAngle;
+
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function animate(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeOut(progress);
+    positionsWheelAngle = startAngle + totalRotation * eased;
+    drawPositionsWheel(positionsWheelAngle);
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      isSpinningPos = false;
+      btn.disabled = false;
+      // Find which slice is at the top
+      const sliceAngle = (Math.PI * 2) / positions.length;
+      const normalizedAngle = ((positionsWheelAngle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+      const pointerAngle = (Math.PI * 2 - normalizedAngle + Math.PI * 1.5) % (Math.PI * 2);
+      const idx = Math.floor(pointerAngle / sliceAngle) % positions.length;
+      const pos = positions[idx];
+      showPositionModal(pos);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+// Fallback canvas illustration (used only if the SVG fails to load).
+function drawPositionFallback(canvas, pos) {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#1a0a2e';
+  ctx.roundRect(0, 0, canvas.width, canvas.height, 16);
+  ctx.fill();
+  ctx.fillStyle = '#b537f2';
+  ctx.font = 'bold 18px "Playfair Display", serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(pos.name, canvas.width/2, canvas.height/2 - 8);
+  ctx.font = '12px DM Sans';
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillText('Ilustração indisponível', canvas.width/2, canvas.height/2 + 18);
+}
+
+function showPositionModal(pos) {
+  document.getElementById('modal-pos-name').textContent = pos.name;
+  document.getElementById('modal-pos-desc').textContent = pos.desc || '';
+
+  const catLabels = { lying:'Deitado/a', seated:'Sentada', doggy:'De quatro', standing:'De pé', oral:'Oral/69', anal:'Anal' };
+  const catEl = document.getElementById('modal-pos-cat');
+  catEl.textContent = catLabels[pos.category] || pos.category;
+  catEl.style.background = '#b537f222';
+  catEl.style.color = '#b537f2';
+  catEl.style.border = '1px solid #b537f244';
+
+  const img = document.getElementById('modal-pos-img');
+  const canvas = document.getElementById('modal-pos-canvas');
+  const loader = document.getElementById('modal-pos-loader');
+
+  // Reset state: show loader, hide image + fallback canvas.
+  loader.style.display = 'flex';
+  img.style.display = 'none';
+  canvas.style.display = 'none';
+  img.alt = 'Ilustração da posição ' + pos.name;
+
+  // When the real SVG loads -> reveal the image, hide loader + old canvas.
+  img.onload = function() {
+    loader.style.display = 'none';
+    canvas.style.display = 'none';
+    img.style.display = 'block';
+  };
+  // If the SVG fails -> draw the fallback on the canvas.
+  img.onerror = function() {
+    loader.style.display = 'none';
+    img.style.display = 'none';
+    canvas.style.display = 'block';
+    drawPositionFallback(canvas, pos);
+  };
+
+  // Point the <img> at the real illustration from sexpositions.club
+  img.src = `https://sexpositions.club/illustrations/${pos.id}.svg`;
+
+  openModal('modal-position');
+}
+
+// ===================== FANTASY WHEEL =====================
+const FANTASIES = [
+  { name: 'Professor/a e Aluno/a', icon: '📚', desc: 'Uma lição privada depois das aulas. Quem ensina quem?' },
+  { name: 'Chefe e Secretário/a', icon: '💼', desc: 'Reunião extraordinária. Portas fechadas. Regras suspensas.' },
+  { name: 'Estranhos num Bar', icon: '🍸', desc: 'Não se conhecem. Apenas atração pura e um número de quarto.' },
+  { name: 'Médico/a e Paciente', icon: '💊', desc: 'Consulta privada. Diagnóstico: tensão insuportável.' },
+  { name: 'Fotógrafo/a e Modelo', icon: '📸', desc: 'O estúdio, a luz, o olhar. A câmera nunca mente.' },
+  { name: 'Massagista e Cliente', icon: '💆', desc: 'As mãos deslizam. O profissionalismo dissolve-se.' },
+  { name: 'Entregador/a ao Domicílio', icon: '📦', desc: 'Estava mesmo à espera desta encomenda especial.' },
+];
+
+let fantasyWheelAngle = 0;
+let isSpinningFantasy = false;
+
+function drawFantasyWheel(angle = 0) {
+  const canvas = document.getElementById('fantasy-wheel');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 140, cy = 140, r = 130;
+  ctx.clearRect(0, 0, 280, 280);
+
+  const slice = (Math.PI * 2) / FANTASIES.length;
+  for (let i = 0; i < FANTASIES.length; i++) {
+    const start = angle + i * slice;
+    const end = start + slice;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = (i % 2 === 0) ? '#2a1a00' : '#1a1500';
+    ctx.fill();
+
+    // Gold border effect
+    ctx.strokeStyle = '#ffd70033';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    const midAngle = start + slice / 2;
+    const tx = cx + (r * 0.65) * Math.cos(midAngle);
+    const ty = cy + (r * 0.65) * Math.sin(midAngle);
+    ctx.save();
+    ctx.translate(tx, ty);
+    ctx.rotate(midAngle + Math.PI/2);
+    ctx.fillStyle = 'rgba(255,215,0,0.85)';
+    ctx.font = 'bold 9px DM Sans';
+    ctx.textAlign = 'center';
+    const name = FANTASIES[i].name.length > 12 ? FANTASIES[i].name.substring(0,11)+'…' : FANTASIES[i].name;
+    ctx.fillText(name, 0, 0);
+    ctx.restore();
+  }
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 24, 0, Math.PI*2);
+  ctx.fillStyle = '#0d0900';
+  ctx.fill();
+  ctx.strokeStyle = '#ffd700';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.font = 'bold 18px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffd700';
+  ctx.fillText('🎭', cx, cy);
+}
+
+function spinFantasyWheel() {
+  if (isSpinningFantasy) return;
+  isSpinningFantasy = true;
+  const btn = document.getElementById('btn-spin-fantasy');
+  btn.disabled = true;
+
+  const totalRotation = (Math.PI * 2 * (5 + Math.random()*5)) + Math.random() * Math.PI * 2;
+  const duration = 3500 + Math.random()*1000;
+  const startTime = performance.now();
+  const startAngle = fantasyWheelAngle;
+
+  function easeOut(t) { return 1 - Math.pow(1-t, 3); }
+  function animate(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeOut(progress);
+    fantasyWheelAngle = startAngle + totalRotation * eased;
+    drawFantasyWheel(fantasyWheelAngle);
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      isSpinningFantasy = false;
+      btn.disabled = false;
+      const sliceAngle = (Math.PI * 2) / FANTASIES.length;
+      const normalizedAngle = ((fantasyWheelAngle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+      const pointerAngle = (Math.PI * 2 - normalizedAngle + Math.PI * 1.5) % (Math.PI * 2);
+      const idx = Math.floor(pointerAngle / sliceAngle) % FANTASIES.length;
+      showFantasyModal(FANTASIES[idx]);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function showFantasyModal(fantasy) {
+  document.getElementById('modal-fantasy-icon').textContent = fantasy.icon;
+  document.getElementById('modal-fantasy-name').textContent = fantasy.name;
+  document.getElementById('modal-fantasy-desc').textContent = fantasy.desc;
+  openModal('modal-fantasy');
+}
+
+// ===================== KINKY WHEEL =====================
+const KINKY_OPTIONS = [
+  { name: 'Spanking', icon: '👋', desc: 'Palmadas controladas. Intensidade acordada entre vocês.', intensity: '🌶🌶' },
+  { name: 'Choking Suave', icon: '🤲', desc: 'Mão suave no pescoço. Comunicação e confiança total.', intensity: '🌶🌶🌶' },
+  { name: 'Hair Pulling', icon: '💇', desc: 'Puxar o cabelo com confiança. Segurar, não machucar.', intensity: '🌶🌶' },
+  { name: 'Dirty Talk', icon: '🗣️', desc: 'Sussurrar fantasias proibidas ao ouvido. Sem filtros.', intensity: '🌶' },
+  { name: 'Algemas', icon: '⛓️', desc: 'Prender as mãos — com fio, lenço ou algemas. Vulnerabilidade total.', intensity: '🌶🌶🌶' },
+  { name: 'Submissão 5min', icon: '🙇', desc: 'Um de vocês obedece a tudo durante 5 minutos. Usa a palavra de segurança se necessário.', intensity: '🌶🌶🌶🌶' },
+];
+
+let kinkyWheelAngle = 0;
+let isSpinningKinky = false;
+
+function drawKinkyWheel(angle = 0) {
+  const canvas = document.getElementById('kinky-wheel');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 140, cy = 140, r = 130;
+  ctx.clearRect(0, 0, 280, 280);
+
+  const slice = (Math.PI * 2) / KINKY_OPTIONS.length;
+  for (let i = 0; i < KINKY_OPTIONS.length; i++) {
+    const start = angle + i * slice;
+    const end = start + slice;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = i % 2 === 0 ? '#2a0008' : '#1a0005';
+    ctx.fill();
+    ctx.strokeStyle = '#ff174433';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    const midAngle = start + slice / 2;
+    const tx = cx + (r * 0.65) * Math.cos(midAngle);
+    const ty = cy + (r * 0.65) * Math.sin(midAngle);
+    ctx.save();
+    ctx.translate(tx, ty);
+    ctx.rotate(midAngle + Math.PI/2);
+    ctx.fillStyle = 'rgba(255,80,80,0.9)';
+    ctx.font = 'bold 10px DM Sans';
+    ctx.textAlign = 'center';
+    const name = KINKY_OPTIONS[i].name.length > 12 ? KINKY_OPTIONS[i].name.substring(0,11)+'…' : KINKY_OPTIONS[i].name;
+    ctx.fillText(name, 0, 0);
+    ctx.restore();
+  }
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 24, 0, Math.PI*2);
+  ctx.fillStyle = '#0d0000';
+  ctx.fill();
+  ctx.strokeStyle = '#ff1744';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.font = 'bold 18px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ff1744';
+  ctx.fillText('🔥', cx, cy);
+}
+
+function spinKinkyWheel() {
+  if (isSpinningKinky) return;
+  isSpinningKinky = true;
+  const btn = document.getElementById('btn-spin-kinky');
+  btn.disabled = true;
+
+  const totalRotation = (Math.PI * 2 * (5 + Math.random()*5)) + Math.random() * Math.PI * 2;
+  const duration = 3500 + Math.random()*1000;
+  const startTime = performance.now();
+  const startAngle = kinkyWheelAngle;
+
+  function easeOut(t) { return 1 - Math.pow(1-t, 3); }
+  function animate(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = easeOut(progress);
+    kinkyWheelAngle = startAngle + totalRotation * eased;
+    drawKinkyWheel(kinkyWheelAngle);
+    if (progress < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      isSpinningKinky = false;
+      btn.disabled = false;
+      const sliceAngle = (Math.PI * 2) / KINKY_OPTIONS.length;
+      const normalizedAngle = ((kinkyWheelAngle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+      const pointerAngle = (Math.PI * 2 - normalizedAngle + Math.PI * 1.5) % (Math.PI * 2);
+      const idx = Math.floor(pointerAngle / sliceAngle) % KINKY_OPTIONS.length;
+      showKinkyModal(KINKY_OPTIONS[idx]);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function showKinkyModal(option) {
+  document.getElementById('modal-kinky-icon').textContent = option.icon;
+  document.getElementById('modal-kinky-name').textContent = option.name;
+  document.getElementById('modal-kinky-desc').innerHTML = option.desc + '<br><span style="font-size:0.8rem;color:#884444">Intensidade: ' + option.intensity + '</span>';
+  openModal('modal-kinky');
+}
+
+// ===================== MODAL =====================
+function openModal(id) {
+  const overlay = document.getElementById(id);
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      overlay.classList.add('open');
+    });
+  });
+}
+
+function closeModal(id) {
+  const overlay = document.getElementById(id);
+  overlay.classList.remove('open');
+  setTimeout(() => { overlay.style.display = 'none'; }, 350);
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal(overlay.id);
+  });
+});
+
+// ===================== BLIND CHALLENGE =====================
+// Player 1 = Homem | Player 2 = Mulher
+let blindPlayerWithBandana = 1; // 1 or 2 (quem está de venda = ALVO da ação)
+let blindPlayer1Name = 'Jogador 1';
+let blindPlayer2Name = 'Jogador 2';
+
+function setBlindPlayer(n) {
+  blindPlayerWithBandana = n;
+  document.getElementById('blind-toggle1').classList.toggle('active', n === 1);
+  document.getElementById('blind-toggle2').classList.toggle('active', n === 2);
+}
+
+function startBlindChallenge() {
+  const n1 = document.getElementById('blind-name1').value.trim() || 'Jogador 1';
+  const n2 = document.getElementById('blind-name2').value.trim() || 'Jogador 2';
+  blindPlayer1Name = n1;
+  blindPlayer2Name = n2;
+
+  const withBandana = blindPlayerWithBandana === 1 ? n1 : n2;
+  const controller = blindPlayerWithBandana === 1 ? n2 : n1;
+
+  document.getElementById('blind-instruction').innerHTML =
+    `<strong style="color:#00f5c4">${withBandana}</strong> — coloca a venda nos olhos!<br><br>` +
+    `<strong style="color:#b537f2">${controller}</strong> — controla o ecrã.`;
+
+  document.getElementById('blind-phase1').style.display = 'block';
+  document.getElementById('blind-phase2').style.display = 'none';
+  document.getElementById('blind-challenge-content').classList.add('challenge-hidden');
+  document.getElementById('blind-challenge-content').classList.remove('revealed');
+
+  showScreen('screen-blind-game');
+}
+
+function showBlindPhase2() {
+  document.getElementById('blind-phase1').style.display = 'none';
+  document.getElementById('blind-phase2').style.display = 'block';
+  generateNewBlindChallenge();
+}
+
+// The blindfolded player is the TARGET of the action, so the locations
+// depend on THAT player's body:
+//   Jogador 1 (Homem) de venda  -> alvo = corpo masculino -> LOCATIONS_MALE_BODY
+//   Jogador 2 (Mulher) de venda -> alvo = corpo feminino  -> LOCATIONS_FEMALE_BODY
+function getBlindLocations() {
+  return blindPlayerWithBandana === 1 ? LOCATIONS_MALE_BODY : LOCATIONS_FEMALE_BODY;
+}
+
+function generateNewBlindChallenge() {
+  const action = pickRandom(DICE_ACTIONS);
+  const loc = pickRandom(getBlindLocations());
+
+  document.getElementById('blind-action-text').textContent = action;
+  document.getElementById('blind-location-text').textContent = loc;
+  document.getElementById('blind-challenge-content').classList.add('challenge-hidden');
+  document.getElementById('blind-challenge-content').classList.remove('revealed');
+}
+
+function revealChallenge() {
+  document.getElementById('blind-challenge-content').classList.remove('challenge-hidden');
+  document.getElementById('blind-challenge-content').classList.add('revealed');
+}
+function hideChallenge() {
+  document.getElementById('blind-challenge-content').classList.remove('revealed');
+  document.getElementById('blind-challenge-content').classList.add('challenge-hidden');
+}
+
+function completeBlindTurn() {
+  // Swap bandana player
+  blindPlayerWithBandana = blindPlayerWithBandana === 1 ? 2 : 1;
+  const withBandana = blindPlayerWithBandana === 1 ? blindPlayer1Name : blindPlayer2Name;
+  const controller = blindPlayerWithBandana === 1 ? blindPlayer2Name : blindPlayer1Name;
+
+  document.getElementById('blind-instruction').innerHTML =
+    `Turno seguinte!<br><br>` +
+    `<strong style="color:#00f5c4">${withBandana}</strong> — coloca a venda nos olhos!<br><br>` +
+    `<strong style="color:#b537f2">${controller}</strong> — controla o ecrã.`;
+
+  document.getElementById('blind-phase1').style.display = 'block';
+  document.getElementById('blind-phase2').style.display = 'none';
+}
+
+// ===================== INITIAL =====================
+window.addEventListener('DOMContentLoaded', () => {
+  setDiceTurn('male');
+});
+
+// Fix for roundRect on older browsers
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.lineTo(x + w - r, y);
+    this.quadraticCurveTo(x + w, y, x + w, y + r);
+    this.lineTo(x + w, y + h - r);
+    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    this.lineTo(x + r, y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - r);
+    this.lineTo(x, y + r);
+    this.quadraticCurveTo(x, y, x + r, y);
+    this.closePath();
+  };
+}
+</script>
+</body>
+</html>
