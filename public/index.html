@@ -710,13 +710,13 @@ function showScreen(id) {
 const LOCATIONS_FEMALE_BODY = [
   'Pescoço', 'Seios', 'Mamilos', 'Rabo', 'Coxas', 'Clítoris',
   'Orelha', 'Pés', 'Virilha', 'Lábios', 'Nuca',
-  'Linha da Cintura', 'Costas', 'Barriga', 'Atrás dos Joelhos', 'Axilas', 'Pulsos'
+  'Linha da Cintura', 'Costas', 'Barriga', 'Atrás dos Joelhos', 'Axilas', 'Pulsos' , 'Dedos Mãos' , 'Dedos pés'
 ];
 
 const LOCATIONS_MALE_BODY = [
   'Pescoço', 'Mamilos', 'Coxas', 'Pénis',
   'Orelha', 'Virilha', 'Lábios',
-  'Linha da Cintura', 'Costas', 'Peito', 'Barriga', 'Pulsos'
+  'Linha da Cintura', 'Costas', 'Peito', 'Barriga', 'Pulsos' , 'Dedos Mãos'
 ];
 
 const DICE_ACTIONS = [
@@ -733,10 +733,19 @@ const DICE_ACTIONS = [
   'Respirar quente',
   'Morder com pressão',
   'Esfregar o corpo/rosto',
-  'Dar palmadas leves',
+  'Dar palmadas Fortes',
   'Chupar intensamente',
   'Lamber em círculos rápidos',
-  'Ataque Surpresa'
+  'Ataque Surpresa',
+  'Arrastar a língua',
+  'Acariciar com a ponta da língua',
+  'Provocar com a ponta da língua',
+  'Chupar e lamber ao mesmo tempo',
+  'Respirar e gemer no local',
+  'Arrastar unhas de leve',
+  'Puxar com os lábios',
+  'Esfregar o rosto',
+  'Dar palmadas leves/firmes'
 ];
 
 function pickRandom(arr) {
@@ -827,6 +836,10 @@ const POSITIONS = [
   { id: 'against-the-wall',  name: 'Contra a Parede',   category: 'standing', desc: 'De pé, força e paixão.',                   img: 'https://www.sexualpositionsfree.com/wp-content/uploads/2026/05/Driving-The-Peg-Home-Against-A-Wall-1.jpg' },
   { id: 'x-position',        name: 'Posição X',         category: 'lying',    desc: 'Pernas cruzadas, sensação intensa.',       img: 'https://www.the-sun.com/wp-content/uploads/sites/6/2020/02/dk-graphic-sex-position-cross-legs-1.jpg?quality=80&strip=all&w=1080&h=1000&crop=1' },
   { id: 'full-n',            name: 'Full N',            category: 'seated',   desc: 'Variação profunda e envolvente.',          img: 'https://sexpositions.club/wp-content/uploads/2019/06/2_4_5.png' },
+  { id: 'prone-bone',        name: 'Prone Bone',        category: 'lying',    desc: 'Posição deitada com apoio em ossos.',      img: 'https://sexpositions.club/wp-content/uploads/2016/03/8_18_2.png' },
+  { id: 'The-eagle',         name: 'The Eagle',         category: 'standing', desc: 'Posição de pé, com as pernas abertas.',     img: 'https://sexpositions.club/wp-content/uploads/2016/03/3_37_2.png' },
+  { id: 'Cat',               name: 'Gato',              category: 'lying',    desc: 'Posição deitada com as pernas levantadas.', img: 'https://sexpositions.club/wp-content/uploads/2016/02/3_2_3.png' },
+  { id: 'Bench',             name: 'Banco',             category: 'seated',   desc: 'Sentado em um banco, com as pernas estendidas.', img: 'https://sexpositions.club/wp-content/uploads/2016/03/2_15.png' }
 ];
 
 let activeCats = new Set(['standing','doggy','seated','lying','oral']);
@@ -1033,6 +1046,18 @@ const FANTASIES = [
   { name: 'Entregador/a ao Domicílio', icon: '📦', desc: 'Não há dinheiro para pagar a encomenda... o pagamento terá de ser feito de outra forma.' },
   { name: 'Interrogatório Policial', icon: '👮', desc: 'Um foi apanhado a fazer algo ilegal e o polícia usa autoridade total para o interrogar e revistar.' },
   { name: 'Raptado/a / Sequestro', icon: '🔗', desc: 'Um está amarrado ou cativo e o outro tem controlo absoluto sobre o que lhe faz.' },
+  { name: 'Mestre/a e Escrava/o', icon: '⛓️', desc: 'Total submissão e controlo. O Mestre/a dita todas as regras e castigos.' },
+  { name: 'Rei/Rainha e Serva/o', icon: '👑', desc: 'Serviço completo e obediência absoluta à majestade.' },
+  { name: 'Pirata e Prisioneira/o', icon: '🏴‍☠️', desc: 'Capturado/a no mar e à mercê dos desejos do capitão pirata.' },
+  { name: 'Mecânico/a e Cliente', icon: '🔧', desc: 'Na oficina depois do horário... pagamento em espécie com muito óleo e suor.' },
+  { name: 'Personal Trainer e Aluna/o', icon: '🏋️', desc: 'Treino muito íntimo e exigente com alongamentos bem intensos.' },
+  { name: 'Detetive e Suspeita/o', icon: '🔍', desc: 'Interrogatório particular com revista corporal completa e métodos persuasivos.' },
+  { name: 'Mordomo e Senhora da Casa', icon: '🎩', desc: 'O mordomo dedicado cumpre todos os desejos da patroa, a qualquer hora.' },
+  { name: 'Preso/a e Guarda da Prisão', icon: '🚔', desc: 'Na cela... o guarda tem total controlo sobre o prisioneiro/a.' },
+  { name: 'Chefe de Máfia e Esposa/Amante', icon: '🖤', desc: 'O perigoso chefe de máfia e o seu parceiro/a favorito/a.' },
+  { name: 'Professor/a Particular em Casa', icon: '📖', desc: 'Aulas particulares muito privadas com lições extra-curriculares.' },
+  { name: 'Ladrão/a e Dono/a da Casa', icon: '🕵️', desc: 'Ladrão/a apanhado/a em flagrante e tem de negociar a liberdade.' },
+  { name: 'Stripper e Cliente no Clube Privado', icon: '💃', desc: 'Dança particular com direito a toque e muito mais no quarto VIP.' },
 ];
 
 let fantasyWheelAngle = 0;
@@ -1143,6 +1168,14 @@ const KINKY_OPTIONS = [
   { name: 'Marcar a Pele', icon: '🩸', desc: 'Morder e arranhar as costas ou coxas com força suficiente para deixar marcas temporárias.', intensity: '🌶🌶🌶' },
   { name: 'Brinquedos / Vibração', icon: '⚡', desc: 'Usar um vibrador no máximo e proibir o parceiro de se mover ou afastar.', intensity: '🌶🌶🌶' },
   { name: 'Deepthroat Obrigatório', icon: '👄', desc: 'Sexo oral profundo até ao limite, controlado totalmente pelo ritmo dele.', intensity: '🌶🌶🌶🌶' },
+  { name: 'Slapping (Cara e Coxas)', icon: '👋', desc: 'Palmadas firmes no rosto e na parte interna das coxas.', intensity: '🌶🌶🌶' },
+  { name: 'Face Sitting / Smothering', icon: '🍑', desc: 'Sentar com força na cara do parceiro, controlando a respiração enquanto é lambido.', intensity: '🌶🌶🌶🌶' },
+  { name: 'Leash & Collar', icon: '🐕', desc: 'Colar com trela — o dominante guia, puxa e controla todos os movimentos.', intensity: '🌶🌶🌶' },
+  { name: 'Forced Orgasm', icon: '💦', desc: 'Continuar estimulando mesmo após o orgasmo até o parceiro implorar para parar.', intensity: '🌶🌶🌶🌶' },
+  { name: 'Sensory Deprivation', icon: '🌑', desc: 'Venda nos olhos + silêncio total. Apenas toque e dor/prazer.', intensity: '🌶🌶🌶' },
+  { name: 'Belt Spanking', icon: '🥾', desc: 'Usar o cinto de couro para palmadas mais intensas e sonoras.', intensity: '🌶🌶🌶🌶' },
+  { name: 'Degradation Heavy', icon: '😈', desc: 'Humilhação verbal pesada + posições degradantes (ex: "cadela no chão").', intensity: '🌶🌶🌶🌶' },
+  { name: 'Fisting Tease / Training', icon: '✊', desc: 'Treino progressivo de penetração com muitos dedos e lubrificante.', intensity: '🌶🌶🌶🌶🌶' },
 ];
 
 let kinkyWheelAngle = 0;
