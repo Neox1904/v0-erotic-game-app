@@ -212,13 +212,6 @@
   }
   .input-field:focus { border-color: var(--neon-purple); }
 
-  /* KINKY SCREEN BG */
-  #screen-kinky, #screen-kinky-warning {
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, #4a000022, transparent),
-      radial-gradient(ellipse 50% 80% at -10% 50%, #3a000044, transparent);
-  }
-
   /* REVEAL BTN */
   .btn-reveal {
     background: linear-gradient(135deg, #b537f2, #ff2d78);
@@ -268,13 +261,6 @@
   ::-webkit-scrollbar { width: 3px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #3a1050; border-radius: 2px; }
-
-  /* Kinky card */
-  .kinky-card {
-    background: linear-gradient(135deg, #1a0005, #200010);
-    border: 1px solid #4a001533;
-    border-radius: 16px; padding: 16px;
-  }
 
   /* Challenge result box */
   .challenge-box {
@@ -362,18 +348,6 @@
             <div class="card-desc">Roleplay e cenários de fantasia para soltar a imaginação.</div>
           </div>
           <span class="card-badge" style="background:#ffd70022; color:#ffd700; border: 1px solid #ffd70033;">ROLEPLAY</span>
-        </div>
-      </div>
-
-      <!-- KINKY WHEEL -->
-      <div class="game-card red fade-in-up" style="animation-delay:0.2s" onclick="showScreen('screen-kinky-warning')">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-          <div>
-            <div class="card-icon">🔥</div>
-            <div class="card-title neon-red">Kinky Wheel</div>
-            <div class="card-desc">Modo hardcore com fetiches. Apenas para corajosos.</div>
-          </div>
-          <span class="card-badge" style="background:#ff174422; color:var(--neon-red); border: 1px solid #ff174433;">+18 HARDCORE</span>
         </div>
       </div>
 
@@ -525,66 +499,6 @@
   </div>
 </div>
 
-<!-- ==================== KINKY WARNING ==================== -->
-<div id="screen-kinky-warning" class="screen" style="min-height:100vh; padding: 24px; display:flex; flex-direction:column; justify-content:center;">
-  <div style="position:relative; z-index:1; text-align:center; max-width: 360px; margin: 0 auto;">
-    <div style="font-size: 3.5rem; margin-bottom: 16px;">🔥</div>
-    <div style="width: 60px; height: 2px; background: var(--neon-red); margin: 0 auto 20px; box-shadow: var(--glow-red);"></div>
-    <h2 style="font-size: 1.9rem; font-weight: 900; margin-bottom: 12px;" class="neon-red">KINKY WHEEL</h2>
-    <div style="background: #1a000522; border: 1px solid #ff174422; border-radius: 16px; padding: 20px; margin-bottom: 28px;">
-      <p style="font-size: 0.9rem; line-height: 1.7; color: #dd9999;">
-        ⚠️ Este modo contém <strong>fetiches e práticas BDSM</strong> que requerem <strong>consentimento mútuo</strong> e comunicação prévia.
-      </p>
-      <div class="divider"></div>
-      <p style="font-size: 0.85rem; color: #aa7777; line-height: 1.6;">
-        Estabeleçam uma <strong>palavra de segurança</strong> antes de começar. O uso desta palavra interrompe imediatamente qualquer atividade.
-      </p>
-    </div>
-    <p style="font-size: 1rem; color: #e8d5f5; margin-bottom: 24px; font-weight: 500;">Estão ambos de acordo e com consentimento?</p>
-    <div style="display:flex; flex-direction:column; gap: 12px;">
-      <button class="btn-neon" onclick="showScreen('screen-kinky')" style="background: linear-gradient(135deg, #ff1744, #8b0000);">
-        🔥 Sim, Avançar
-      </button>
-      <button class="btn-outline" onclick="showScreen('screen-home')" style="color: #9966bb; border-color: #3a1050;">← Voltar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== KINKY WHEEL ==================== -->
-<div id="screen-kinky" class="screen" style="min-height:100vh; padding: 24px;">
-  <div style="position:relative; z-index:1;">
-    <button class="btn-back" onclick="showScreen('screen-home')" style="color: #cc4444;">← Voltar ao Menu</button>
-    <h2 style="font-size:1.8rem; margin: 16px 0 6px;" class="neon-red">Kinky Wheel</h2>
-    <p style="font-size:0.82rem; color:#774444; margin-bottom: 24px;">Modo hardcore — palavra de segurança ativa.</p>
-
-    <div style="display:flex; flex-direction:column; align-items:center; gap: 20px; margin-bottom: 24px;">
-      <div class="wheel-container">
-        <div class="wheel-pointer" style="border-top-color: #ff1744;"></div>
-        <canvas id="kinky-wheel" width="280" height="280" class="wheel-canvas"></canvas>
-      </div>
-      <button class="btn-neon" onclick="spinKinkyWheel()" id="btn-spin-kinky" style="min-width: 200px; background: linear-gradient(135deg, #ff1744, #8b0000);">
-        🔥 Girar Roleta
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Kinky Modal -->
-<div class="modal-overlay" id="modal-kinky">
-  <div class="modal-box" style="background: linear-gradient(180deg, #1a0005, #0d0000); border-top-color: #4a0010;">
-    <div style="text-align:center;">
-      <div style="font-size: 0.72rem; letter-spacing: 0.2em; color: #8b3333; margin-bottom: 12px; text-transform: uppercase;">⚠ Sorteado ⚠</div>
-      <div id="modal-kinky-icon" style="font-size: 3rem; margin-bottom: 8px;"></div>
-      <div id="modal-kinky-name" style="font-family:'Playfair Display',serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 12px;" class="neon-red"></div>
-      <div id="modal-kinky-desc" style="font-size: 0.88rem; color: #cc9999; line-height: 1.6; margin-bottom: 20px;"></div>
-      <div style="background: #1a000522; border: 1px solid #ff174422; border-radius: 12px; padding: 12px; margin-bottom: 20px;">
-        <p style="font-size: 0.75rem; color: #8b3333;">⚠ Lembrem-se da palavra de segurança. O consentimento pode ser retirado a qualquer momento.</p>
-      </div>
-      <button class="btn-neon" onclick="closeModal('modal-kinky')" style="width:100%; background: linear-gradient(135deg, #ff1744, #8b0000);">Girar Novamente</button>
-    </div>
-  </div>
-</div>
-
 <!-- ==================== BLIND CHALLENGE SETUP ==================== -->
 <div id="screen-blind-setup" class="screen" style="min-height:100vh; padding: 24px;">
   <div style="position:relative; z-index:1;">
@@ -699,7 +613,6 @@ function showScreen(id) {
   // Initialize wheels when shown
   if (id === 'screen-positions') drawPositionsWheel();
   if (id === 'screen-fantasy') drawFantasyWheel();
-  if (id === 'screen-kinky') drawKinkyWheel();
   window.scrollTo(0,0);
 }
 
@@ -1153,122 +1066,6 @@ function showFantasyModal(fantasy) {
   document.getElementById('modal-fantasy-name').textContent = fantasy.name;
   document.getElementById('modal-fantasy-desc').textContent = fantasy.desc;
   openModal('modal-fantasy');
-}
-
-// ===================== KINKY WHEEL =====================
-const KINKY_OPTIONS = [
-  { name: 'Spanking Intenso', icon: '👋', desc: 'Sequência de palmadas firmes no rabo até ficar bem marcado/quente.', intensity: '🌶🌶🌶' },
-  { name: 'Choking', icon: '🤲', desc: 'Mão no pescoço com aperto controlado para cortar ligeiramente a respiração — sempre com cuidado.', intensity: '🌶🌶🌶' },
-  { name: 'Hair Pulling', icon: '💇', desc: 'Puxar o cabelo por trás com força para ditar a direção da cabeça e o ritmo.', intensity: '🌶🌶🌶' },
-  { name: 'Dirty Talk Hardcore', icon: '🗣️', desc: 'Humilhação verbal erótica, dizer exatamente as coisas mais porcas e explícitas ao ouvido.', intensity: '🌶🌶' },
-  { name: 'Bondage Total', icon: '⛓️', desc: 'Prender os pulsos e tornozelos à cama, deixando o parceiro completamente indefeso.', intensity: '🌶🌶🌶🌶' },
-  { name: 'Submissão Cega (5min)', icon: '🙇', desc: 'O submisso ajoelha-se e obedece a QUALQUER ordem física do dominante sem hesitar.', intensity: '🌶🌶🌶🌶' },
-  { name: 'Restrição de Movimento', icon: '🔒', desc: 'O dominante prende os braços do outro contra o colchão usando apenas a força do corpo.', intensity: '🌶🌶🌶' },
-  { name: 'Edging / Negação', icon: '⏸️', desc: 'Levar o parceiro ao limite do orgasmo e obrigá-lo a parar à força. Repetir várias vezes.', intensity: '🌶🌶🌶' },
-  { name: 'Oral Forçado', icon: '😈', desc: 'Ritmo agressivo no sexo oral com leves palmadinhas na cara com a mão ou com o membro.', intensity: '🌶🌶🌶' },
-  { name: 'Marcar a Pele', icon: '🩸', desc: 'Morder e arranhar as costas ou coxas com força suficiente para deixar marcas temporárias.', intensity: '🌶🌶🌶' },
-  { name: 'Brinquedos / Vibração', icon: '⚡', desc: 'Usar um vibrador no máximo e proibir o parceiro de se mover ou afastar.', intensity: '🌶🌶🌶' },
-  { name: 'Deepthroat Obrigatório', icon: '👄', desc: 'Sexo oral profundo até ao limite, controlado totalmente pelo ritmo dele.', intensity: '🌶🌶🌶🌶' },
-  { name: 'Slapping (Cara e Coxas)', icon: '👋', desc: 'Palmadas firmes no rosto e na parte interna das coxas.', intensity: '🌶🌶🌶' },
-  { name: 'Face Sitting / Smothering', icon: '🍑', desc: 'Sentar com força na cara do parceiro, controlando a respiração enquanto é lambido.', intensity: '🌶🌶🌶🌶' },
-  { name: 'Leash & Collar', icon: '🐕', desc: 'Colar com trela — o dominante guia, puxa e controla todos os movimentos.', intensity: '🌶🌶🌶' },
-  { name: 'Forced Orgasm', icon: '💦', desc: 'Continuar estimulando mesmo após o orgasmo até o parceiro implorar para parar.', intensity: '🌶🌶🌶🌶' },
-  { name: 'Sensory Deprivation', icon: '🌑', desc: 'Venda nos olhos + silêncio total. Apenas toque e dor/prazer.', intensity: '🌶🌶🌶' },
-  { name: 'Belt Spanking', icon: '🥾', desc: 'Usar o cinto de couro para palmadas mais intensas e sonoras.', intensity: '🌶🌶🌶🌶' },
-  { name: 'Degradation Heavy', icon: '😈', desc: 'Humilhação verbal pesada + posições degradantes (ex: "cadela no chão").', intensity: '🌶🌶🌶🌶' },
-  { name: 'Fisting Tease / Training', icon: '✊', desc: 'Treino progressivo de penetração com muitos dedos e lubrificante.', intensity: '🌶🌶🌶🌶🌶' },
-];
-
-let kinkyWheelAngle = 0;
-let isSpinningKinky = false;
-
-function drawKinkyWheel(angle = 0) {
-  const canvas = document.getElementById('kinky-wheel');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const cx = 140, cy = 140, r = 130;
-  ctx.clearRect(0, 0, 280, 280);
-
-  const slice = (Math.PI * 2) / KINKY_OPTIONS.length;
-  for (let i = 0; i < KINKY_OPTIONS.length; i++) {
-    const start = angle + i * slice;
-    const end = start + slice;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, r, start, end);
-    ctx.closePath();
-    ctx.fillStyle = i % 2 === 0 ? '#2a0008' : '#1a0005';
-    ctx.fill();
-    ctx.strokeStyle = '#ff174433';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    const midAngle = start + slice / 2;
-    const tx = cx + (r * 0.65) * Math.cos(midAngle);
-    const ty = cy + (r * 0.65) * Math.sin(midAngle);
-    ctx.save();
-    ctx.translate(tx, ty);
-    ctx.rotate(midAngle + Math.PI/2);
-    ctx.fillStyle = 'rgba(255,80,80,0.9)';
-    ctx.font = 'bold 10px DM Sans';
-    ctx.textAlign = 'center';
-    const name = KINKY_OPTIONS[i].name.length > 12 ? KINKY_OPTIONS[i].name.substring(0,11)+'…' : KINKY_OPTIONS[i].name;
-    ctx.fillText(name, 0, 0);
-    ctx.restore();
-  }
-
-  ctx.beginPath();
-  ctx.arc(cx, cy, 24, 0, Math.PI*2);
-  ctx.fillStyle = '#0d0000';
-  ctx.fill();
-  ctx.strokeStyle = '#ff1744';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.font = 'bold 18px serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#ff1744';
-  ctx.fillText('🔥', cx, cy);
-}
-
-function spinKinkyWheel() {
-  if (isSpinningKinky) return;
-  isSpinningKinky = true;
-  const btn = document.getElementById('btn-spin-kinky');
-  btn.disabled = true;
-
-  const totalRotation = (Math.PI * 2 * (5 + Math.random()*5)) + Math.random() * Math.PI * 2;
-  const duration = 3500 + Math.random()*1000;
-  const startTime = performance.now();
-  const startAngle = kinkyWheelAngle;
-
-  function easeOut(t) { return 1 - Math.pow(1-t, 3); }
-  function animate(now) {
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = easeOut(progress);
-    kinkyWheelAngle = startAngle + totalRotation * eased;
-    drawKinkyWheel(kinkyWheelAngle);
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      isSpinningKinky = false;
-      btn.disabled = false;
-      const sliceAngle = (Math.PI * 2) / KINKY_OPTIONS.length;
-      const normalizedAngle = ((kinkyWheelAngle % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
-      const pointerAngle = (Math.PI * 2 - normalizedAngle + Math.PI * 1.5) % (Math.PI * 2);
-      const idx = Math.floor(pointerAngle / sliceAngle) % KINKY_OPTIONS.length;
-      showKinkyModal(KINKY_OPTIONS[idx]);
-    }
-  }
-  requestAnimationFrame(animate);
-}
-
-function showKinkyModal(option) {
-  document.getElementById('modal-kinky-icon').textContent = option.icon;
-  document.getElementById('modal-kinky-name').textContent = option.name;
-  document.getElementById('modal-kinky-desc').innerHTML = option.desc + '<br><span style="font-size:0.8rem;color:#884444">Intensidade: ' + option.intensity + '</span>';
-  openModal('modal-kinky');
 }
 
 // ===================== MODAL =====================
